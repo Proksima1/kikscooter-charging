@@ -3,19 +3,17 @@ from textwrap import dedent as d
 
 import dash
 import dash_cytoscape as cyto
-import networkx as nx
-import plotly.graph_objects as go
-from colour import Color
-from dash import Input, Output, State, callback, dcc, html
 
+from dash import dcc, html
+
+from grapher.config import graph, DEFAULT_JSON, nodes_stylesheet
+from grapher.misc import make_graph
 from callbacks import (
     displayHoverNodeData,
     on_button_click,
     validate_json_output,
     submit_json,
 )
-from grapher.config import graph, DEFAULT_JSON, nodes_stylesheet
-from grapher.misc import get_average_charge, graph_to_nodes, make_graph
 
 # Создаем Dash приложение
 
@@ -95,7 +93,7 @@ app.layout = html.Div(
                             className="twelve columns",
                             style={"height": "550px"},
                             elements=nodes,
-                            stylesheet=nodes_stylesheet
+                            stylesheet=nodes_stylesheet,
                         ),
                         html.Pre(
                             className="twelve columns",
@@ -114,7 +112,7 @@ app.layout = html.Div(
                                     d(
                                         """
                             **Данные вершин**\n
-                            При наведении на вершину ниже будут показаны данные вершины.
+                            При нажатии на вершину ниже будут показаны данные вершины.
                             """
                                     )
                                 ),
@@ -122,12 +120,12 @@ app.layout = html.Div(
                                     id="hover_data",
                                     style={
                                         "height": "300px",
-                                        "overflow-y": "auto",
+                                        "overflowY": "auto",
                                         "width": "300px",
                                         "padding": "10px",
-                                        "background-color": "white",
+                                        "backgroundColor": "white",
                                         "border": "1px solid #ccc",
-                                        "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                        "boxShadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
                                     },
                                 ),
                                 html.Br(),
@@ -135,13 +133,13 @@ app.layout = html.Div(
                                     className="twelve columns",
                                     style={
                                         "display": "flex",
-                                        "align-items": "center",
-                                        "justify-content": "space-between",
+                                        "alignItems": "center",
+                                        "justifyContent": "space-between",
                                     },
                                     children=[
                                         html.P(
                                             "Заряд зоны: ",
-                                            style={"font-weight": "bold"},
+                                            style={"fontWeight": "bold"},
                                         ),
                                         html.P(
                                             id="charge_data",

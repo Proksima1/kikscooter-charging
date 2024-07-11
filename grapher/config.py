@@ -1,19 +1,15 @@
+import json
+
+import neomodel
 from colour import Color
 
-from GraphDB.functions import read_graph
+from GraphDB.functions import read_graph, make_random_graph
 from GraphDB.models import Locker
-from main import Charger
+from GraphDB.charger import Charger
 from neomodel import config
 from scripts.db_update import Updater
 
 config.DATABASE_URL = "bolt://neo4j:changeme@localhost:7687"
-
-
-graph = read_graph()
-start_pos = Locker.nodes.get(name="Locker 1")
-charger = Charger(graph, start_pos.node_id)
-updater = Updater()
-
 
 DEFAULT_JSON = {
     "parkingCount": 40,
@@ -21,6 +17,18 @@ DEFAULT_JSON = {
     "scooterCount": 150,
     "squareSize": 1000,
 }
+
+graph = read_graph()
+if len(graph.nodes) == 0:
+    make_random_graph(DEFAULT_JSON)
+graph = read_graph()
+start_pos = Locker.nodes.get(name="Locker 1")
+
+charger = Charger(graph, start_pos.node_id)
+updater = Updater()
+
+
+
 
 nodes_stylesheet = [
     {

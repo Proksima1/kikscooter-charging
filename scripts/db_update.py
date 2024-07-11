@@ -1,10 +1,7 @@
 import random
-import subprocess
-import sys
-import time
+from time import sleep
 
-from neomodel import config
-from constants import TIME_FOR_CHARGE
+from neomodel import config, db
 from GraphDB.models import Locker, Scooter, Parking
 
 
@@ -12,14 +9,18 @@ class Updater:
     """Класс для обновления данных в базе. Не является обязательной частью системы"""
     TIME_BETWEEN_UPDATES = 10
 
+    @db.transaction
     def decrease_scooter_charge(self, percent):
         for scooter in Scooter.nodes.all():
             scooter.charge -= percent
             scooter.save()
 
+    @db.transaction
     def random_change_scooters(self):
         weights = {"change_parking": 45, "remove": 35, "add": 30}
         scooters = Parking.nodes.fetch_relations("has_scooter").all()
+        if len(scooters) == 0:
+            return
         scooters = list(map(lambda x: [x[0], x[1]], scooters))
         scooters_count = len(scooters)
         changes_count = random.randint(3, scooters_count)
@@ -55,6 +56,7 @@ class Updater:
                     scooters.append([parking, new_scooter])
                     scooters_count += 1
 
+    @db.transaction
     def update_lockers(self, time_passed: int):
         """
         :param time_passed: сколько времени прошло между вызовами функции
@@ -73,4 +75,9 @@ class Updater:
 
 if __name__ == "__main__":
     config.DATABASE_URL = "bolt://neo4j:changeme@localhost:7687"
-    main()
+    updater = Updater()
+    while True:
+        print("Randomizing....")
+        updater.random_change_scooters()
+        updater.decrease_scooter_charge(0.4)
+        sleep(5)

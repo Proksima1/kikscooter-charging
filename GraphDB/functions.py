@@ -75,6 +75,7 @@ def make_static_graph() -> None:
     _make_connections()
 
 
+@db.transaction
 def make_random_graph(params: Dict) -> None:
     """ "
     :param params: Dictionary of parameters(parkingCount, lockerCount, scooterCount, squareSize)
@@ -158,6 +159,6 @@ if __name__ == "__main__":
     #     # "squareSize": 1000,
     # # }
     # # make_random_graph(params=params)
-    make_static_graph()
+    # make_static_graph()
     # read_graph()
     print("Done")

@@ -40,7 +40,7 @@ class Locker(Base):
 class Parking(Base):
     lat = IntegerProperty()
     lon = IntegerProperty()
-    capacity = IntegerProperty(default=lambda: random.choice([5, 10, 15, 20]))
+    capacity = IntegerProperty(default=20)
     lockerPath = RelationshipTo("Locker", "PATH", cardinality=ZeroOrMore, model=PathRel)
     parkingPath = RelationshipTo(
         "Parking", "PATH", cardinality=ZeroOrMore, model=PathRel

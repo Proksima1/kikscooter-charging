@@ -1,7 +1,9 @@
 import json
 
 from dash import Input, Output, State, callback
-from main import get_next_path
+
+from GraphDB.charger import Charger
+from GraphDB.constants import TARGET_LEVEL, CAN_WRITE
 from GraphDB.functions import make_random_graph, delete_all
 from grapher.misc import graph_to_nodes, get_average_charge, make_graph
 
@@ -48,9 +50,14 @@ def submit_json(n_clicks, value):
     prevent_initial_call=True,
 )
 def on_button_click(n_clicks, elements):
+    if CAN_WRITE:
+        graph.get_new_info_lockers()
+        graph.get_new_info_scooters()
     charge_level = graph.get_average_charge_level()
-    if charge_level < 80:
-        path, next_vertex, distance = get_next_path(graph, charger, updater, 80)
+    if charge_level < TARGET_LEVEL:
+        path, next_vertex, distance = graph.charge_nearest_parking(
+            charger, TARGET_LEVEL
+        )
         updater.update_lockers(distance)
         ids = set(i["data"]["id"] for i in elements)
         elements = [i for i in elements if "source" not in i["data"].keys()]
