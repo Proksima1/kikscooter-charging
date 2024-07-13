@@ -8,7 +8,7 @@ from dash import dcc, html
 
 from grapher.config import graph, DEFAULT_JSON, nodes_stylesheet
 from grapher.misc import make_graph
-from callbacks import (
+from grapher.callbacks import (
     displayHoverNodeData,
     on_button_click,
     validate_json_output,
@@ -143,6 +143,23 @@ app.layout = html.Div(
                                         ),
                                         html.P(
                                             id="charge_data",
+                                        ),
+                                    ],
+                                ),
+                                html.Div(
+                                    className="twelve columns",
+                                    style={
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "justifyContent": "space-between",
+                                    },
+                                    children=[
+                                        html.P(
+                                            "Количество батарей у чарджера: ",
+                                            style={"fontWeight": "bold"},
+                                        ),
+                                        html.P(
+                                            id="batteries_count",
                                         ),
                                     ],
                                 ),

@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple
 
 from networkx import Graph as BaseGraph
 
-from GraphDB.constants import CAN_WRITE
+from GraphDB.constants import CAN_WRITE, TARGET_LEVEL
 from GraphDB.models import Scooter, Locker, Parking
 
 
@@ -165,10 +165,8 @@ class Graph(BaseGraph):
         pq = [(0, start)]
 
         while pq:
-            # Извлекаем вершину с минимальным расстоянием
             current_dist, current_vertex = heapq.heappop(pq)
 
-            # Если мы достигли целевой вершины, возвращаем путь
             if current_vertex == end:
                 path = []
                 v = end
@@ -178,11 +176,9 @@ class Graph(BaseGraph):
                 path.reverse()
                 return path, current_dist
 
-            # Если текущее расстояние больше, чем уже найденное, пропускаем
             if current_dist > dist[current_vertex]:
                 continue
 
-            # Обновляем расстояния до соседних вершин
             for neighbor in self.neighbors(current_vertex):
                 time_to_travel = self[current_vertex][neighbor].get(
                     "time_to_travel", None
@@ -200,7 +196,6 @@ class Graph(BaseGraph):
                         prev[neighbor] = current_vertex
                         heapq.heappush(pq, (new_dist, neighbor))
 
-        # Если целевая вершина не была достигнута, возвращаем None
         return None
 
     def evaluate_heuristic(self, charger, target_charge):
@@ -242,7 +237,7 @@ class Graph(BaseGraph):
         return min_path, next_vertex, min_distance
 
     def charge_nearest_parking(self, charger, target_level: int):
-        low_level_vertices = self.find_low_level_vertices(80)
+        low_level_vertices = self.find_low_level_vertices(TARGET_LEVEL)
         available_chargers = self.find_available_chargers()
 
         if charger.available_batteries == 0:

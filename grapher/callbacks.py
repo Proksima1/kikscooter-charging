@@ -34,7 +34,7 @@ def submit_json(n_clicks, value):
         delete_all()
         make_random_graph(json.loads(value))
         graph = read_graph()
-        start_pos = Locker.nodes.get(name="Locker 1")
+        start_pos = Locker.nodes.get(name="Locker 0")
         charger = Charger(graph, start_pos.node_id)
         return make_graph(graph)
 
@@ -44,6 +44,7 @@ def submit_json(n_clicks, value):
         Output("city_graph", "elements"),
         Output("graph_output", "children"),
         Output("charge_data", "children"),
+        Output("batteries_count", "children")
     ],
     Input("next_button", "n_clicks"),
     State("city_graph", "elements"),
@@ -85,11 +86,12 @@ def on_button_click(n_clicks, elements):
                     }
                 )
 
-        return elements, "", charge_level
+        return elements, "", charge_level, charger.available_batteries
     return (
         elements,
         f"Зарядка зоны завершена. Заряд зоны: {graph.get_average_charge_level():.2f}",
         charge_level,
+        ""
     )
 
 

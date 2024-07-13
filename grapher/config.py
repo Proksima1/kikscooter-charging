@@ -22,12 +22,10 @@ graph = read_graph()
 if len(graph.nodes) == 0:
     make_random_graph(DEFAULT_JSON)
 graph = read_graph()
-start_pos = Locker.nodes.get(name="Locker 1")
+start_pos = Locker.nodes.get(name="Locker 0")
 
 charger = Charger(graph, start_pos.node_id)
 updater = Updater()
-
-
 
 
 nodes_stylesheet = [

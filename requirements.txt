@@ -1,6 +1,7 @@
 networkx
 python-dotenv
-PyQt5
-matplotlib
 neomodel
 plotly
+dash
+dash-cytoscape
+colour
